@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: db
+    image: postgres:14.2
+    restart: always
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata
+
+  phoenix:
+    container_name: phoenix
+    image: home_automation/phoenix
+    build: 
+      context: ./home_automation/
+    environment:
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: home_automation_dev
+      PGPORT: 5432
+      # Hostname of our Postgres container.
+      PGHOST: db
+      MIX_ENV: dev
+      PLUG_HOST: plug
+    ports:
+      - '4000:4000'
+    depends_on:
+      - db
+    volumes:
+      - ./home_automation:/app
+
+  plug_communication:
+    container_name: plug
+    image: home_automation/plug_communication
+    build:
+      context: plug_communication
+    environment:
+      PLUG_IP: "192.168.0.159"
+    ports:
+      - '5000:5000'
+
+
+volumes:
+  pgdata:
