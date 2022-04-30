@@ -2,7 +2,11 @@
 
 #from https://pspdfkit.com/blog/2018/how-to-run-your-phoenix-application-with-docker/
 
-mix do compile
+echo "---------- DEPENDENCY FETCH ------------------"
+mix deps.get
+
+echo "---------- COMPILE ------------------"
+echo "Y" | mix do compile
 
 # Wait until postgres is ready
 while ! pg_isready -q -h "$PGHOST" -p "$PGPORT" -U "$PGUSER"
