@@ -18,6 +18,7 @@ defmodule HomeAutomationWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    live "/temp", TemperatureController
   end
 
   # Other scopes may use custom stacks.

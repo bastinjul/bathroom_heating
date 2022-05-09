@@ -29,6 +29,7 @@ services:
       PGHOST: db
       MIX_ENV: dev
       PLUG_HOST: plug
+      TEMP_URL: "http://bathroomtemp/temp"
     ports:
       - '4000:4000'
     depends_on:
