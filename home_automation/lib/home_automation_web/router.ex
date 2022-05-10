@@ -19,6 +19,8 @@ defmodule HomeAutomationWeb.Router do
 
     get "/", PageController, :index
     live "/temp", TemperatureController
+    get "/plug", PlugController, :index
+    get "/plug/switch", PlugController, :switch
   end
 
   # Other scopes may use custom stacks.

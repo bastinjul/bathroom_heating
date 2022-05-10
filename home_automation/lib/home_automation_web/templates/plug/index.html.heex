@@ -1,0 +1,11 @@
+<div style="text-align: center;">
+    <%= if @plug_status do %>
+        <a href="/plug/switch">
+            <img src={Routes.static_path(@conn, "/images/plug-and-play.png")} alt="Plug On"/>
+        </a>
+    <% else %>
+        <a href="/plug/switch">
+            <img src={Routes.static_path(@conn, "/images/plug-and-pause.png")} alt="Plug Off"/>
+        </a>
+    <% end %>
+</div>

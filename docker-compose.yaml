@@ -28,8 +28,9 @@ services:
       # Hostname of our Postgres container.
       PGHOST: db
       MIX_ENV: dev
-      PLUG_HOST: plug
+      PLUG_URL: "http://plug:5000"
       TEMP_URL: "http://bathroomtemp/temp"
+      TEMP_POLLING_TIME: 60000
     ports:
       - '4000:4000'
     depends_on:

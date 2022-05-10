@@ -7,6 +7,7 @@ defmodule HomeAutomation.HeatingManager do
   alias HomeAutomation.Repo
 
   alias HomeAutomation.HeatingManager.Calendar
+  alias HomeAutomation.HeatingManager.PlugClient
 
 
   @doc """
@@ -17,4 +18,24 @@ defmodule HomeAutomation.HeatingManager do
     |> Calendar.changeset(attrs)
     |> Repo.insert()
   end
+
+  @doc """
+  Switch the plug on or off depending on its status
+  """
+  def switch_plug() do
+    plug_status = PlugClient.get_plug_status()
+    if plug_status do
+      PlugClient.turn_off_plug()
+    else
+      PlugClient.turn_on_plug()
+    end
+  end
+
+  @doc """
+  Get the plug status
+  """
+  def get_plug_status() do
+    PlugClient.get_plug_status()
+  end
+
 end

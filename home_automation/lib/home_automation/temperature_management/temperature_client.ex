@@ -5,6 +5,7 @@ defmodule HomeAutomation.TemperatureManager.TemperatureClient do
   plug Tesla.Middleware.BaseUrl, System.get_env("TEMP_URL")
   plug Tesla.Middleware.JSON
 
+  @spec get_temperature :: float
   @doc """
   Get the temperature from the temperature sensor.
   """
