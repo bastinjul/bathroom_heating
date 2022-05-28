@@ -9,14 +9,21 @@
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
   </head>
-  <body class="text-red-500">
-    <header>
-      <section class="container">
-        <a href="/" class="phx-logo">
-          <img src={Routes.static_path(@conn, "/images/logo_small.png")} alt="DomoCrafter Logo"/>
-        </a>
-      </section>
-    </header>
+  <body class="bg-teal-900 text-white">
+    <nav class="flex items-center flex-row bg-teal-500 p-6">
+      <div class="flex items-center flex-shrink-0 text-white mr-6">
+        <a href="/"><span class="font-semibold text-3xl tracking-tight">Home Automation</span></a>
+      </div>
+      <div class="flex items-center flex-shrink-0 text-white mr-6">
+         <a href="/temp"><span class="font-semibold text-xl tracking-tight">Temperature</span></a>
+      </div>
+      <div class="flex items-center flex-shrink-0 text-white mr-6">
+        <a href="/plug"><span class="font-semibold text-xl tracking-tight">Plug</span></a>
+      </div>
+      <div class="flex items-center flex-shrink-0 text-white mr-6">
+        <a href="/calendar"><span class="font-semibold text-xl tracking-tight">Calendar</span></a>
+      </div>
+    </nav>
     <%= @inner_content %>
   </body>
 </html>

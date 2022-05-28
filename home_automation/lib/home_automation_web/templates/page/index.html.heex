@@ -1,25 +1,19 @@
-<section class="phx-hero">
-  <h1><%= gettext "Welcome to %{name}!", name: "DomoCrafter" %></h1>
-</section>
-
-<section class="row">
-  <article class="column">
-    <h2>Temperature Gestion</h2>
-    <ul>
-      <li>
-        <a href="/temp">Temperature live view</a>
-      </li>
-    </ul>
-  </article>
-  <article class="column">
-    <h2>Heating Gestion</h2>
-    <ul>
-      <li>
-        <a href="/plug">Plug Status</a>
-      </li>
-      <li>
-        <a href="/calendar">Calendar</a>
-      </li>
-    </ul>
-  </article>
-</section>
+<div class="grid grid-rows-3 grid-flow-col gap-4">
+  <div class="row-span-3">
+    <p class="text-xl underline decoration-wavy">Plug</p>
+    <button phx-click="plug_switch" phx-throttle="1000">
+      <%= if @plug_status do %>
+            <img src={Routes.static_path(@socket, "/images/plug-and-play.png")} alt="Plug On"/>
+      <% else %>
+            <img src={Routes.static_path(@socket, "/images/plug-and-pause.png")} alt="Plug Off"/>
+      <% end %>
+    </button>
+  </div>
+  <div class="col-span-2">
+  <p class="text-xl underline decoration-wavy">Temperature</p>
+  <h2><%= @temperature %></h2>
+  </div>
+  <div class="row-span-2 col-span-2">
+    <p class="text-xl underline decoration-wavy">Calendar</p>
+  </div>
+</div>

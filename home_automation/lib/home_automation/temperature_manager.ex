@@ -18,7 +18,7 @@ defmodule HomeAutomation.TemperatureManager do
     |> Repo.insert()
   end
 
-  @spec get_temperature :: float
+  @spec get_temperature :: float | :error
   @doc """
   Get the temperature from the temperature sensor.
   """

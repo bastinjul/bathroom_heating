@@ -16,7 +16,7 @@ defmodule HomeAutomationWeb.Router do
   scope "/", HomeAutomationWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    live "/", PageController
     live "/temp", TemperatureController
     get "/plug", PlugController, :index
     get "/plug/switch", PlugController, :switch
