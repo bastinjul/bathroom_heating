@@ -13,7 +13,6 @@ defmodule HomeAutomationWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
   end
-
   scope "/", HomeAutomationWeb do
     pipe_through :browser
 
@@ -21,6 +20,7 @@ defmodule HomeAutomationWeb.Router do
     live "/temp", TemperatureController
     get "/plug", PlugController, :index
     get "/plug/switch", PlugController, :switch
+    live "/calendar", CalendarController
   end
 
   # Other scopes may use custom stacks.
