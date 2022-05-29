@@ -23,11 +23,10 @@ defmodule HomeAutomation.TemperaturePuller do
     @impl true
     def handle_info(:get_temp,{:temp, actual_temp}) do
       new_temp = case TemperatureManager.get_temperature() do
-        {:ok, temp} ->
-            PubSub.broadcast(HomeAutomation.PubSub, "temperature:measurement", {:temp, temp})
-            temp
+        {:ok, temp} -> temp
         _ -> actual_temp
       end
+      if new_temp != 0, do: PubSub.broadcast(HomeAutomation.PubSub, "temperature:measurement", {:temp, new_temp})
       schedule_work()
       {:noreply, {:temp, new_temp}}
     end
