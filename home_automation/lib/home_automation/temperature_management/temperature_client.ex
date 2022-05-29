@@ -5,7 +5,7 @@ defmodule HomeAutomation.TemperatureManager.TemperatureClient do
   plug Tesla.Middleware.BaseUrl, System.get_env("TEMP_URL")
   plug Tesla.Middleware.JSON
 
-  @spec get_temperature :: float | :error
+  @spec get_temperature :: {:ok, float} | :error
   @doc """
   Get the temperature from the temperature sensor.
   """
@@ -13,11 +13,11 @@ defmodule HomeAutomation.TemperatureManager.TemperatureClient do
     Logger.debug "Getting temperature"
     case get("") do
       {:ok, response} ->
-        Logger.debug "Got temperature: #{response.body}"
         {:ok, %{"data" => temp, "sensor" => "temp"}} = Jason.decode(response.body)
-        Logger.debug "Decoded temperature: #{temp}"
-        temp
+        Logger.debug "Got temperature: #{temp}"
+        {:ok, temp}
       _ ->
+        Logger.error "Failed to get temperature"
         :error
     end
   end

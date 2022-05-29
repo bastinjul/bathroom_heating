@@ -15,9 +15,10 @@ defmodule HomeAutomation.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: HomeAutomation.PubSub},
       # Start the Endpoint (http/https)
-      HomeAutomationWeb.Endpoint
+      HomeAutomationWeb.Endpoint,
       # Start a worker by calling: HomeAutomation.Worker.start_link(arg)
       # {HomeAutomation.Worker, arg}
+      HomeAutomation.TemperaturePuller
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
