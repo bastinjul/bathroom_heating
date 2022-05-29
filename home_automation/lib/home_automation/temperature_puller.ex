@@ -5,6 +5,11 @@ defmodule HomeAutomation.TemperaturePuller do
     alias HomeAutomation.TemperatureManager
     alias Phoenix.PubSub
 
+    @temperature_polling_interval System.get_env("TEMP_POLLING_TIME") |> String.to_integer
+
+    @spec temperature_polling_interval :: Integer
+    defp temperature_polling_interval, do: @temperature_polling_interval
+
     def start_link(_) do
       GenServer.start_link(__MODULE__, %{})
     end
@@ -28,7 +33,7 @@ defmodule HomeAutomation.TemperaturePuller do
     end
 
     defp schedule_work do
-      Process.send_after(self(), :get_temp, 1000 * 10)
+      Process.send_after(self(), :get_temp, temperature_polling_interval())
     end
 
 end
