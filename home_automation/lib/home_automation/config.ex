@@ -14,5 +14,6 @@ defmodule HomeAutomation.Config do
     config
     |> cast(attrs, [:label, :value])
     |> validate_required([:label, :value])
+    |> unique_constraint(:label)
   end
 end
