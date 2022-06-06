@@ -44,3 +44,11 @@ It also communicates with the temperature sensor by calling its REST API.
 
 ### Advanced features
 * From the weather data and the previous data, calculate the time at which the heating must be turned on to obtain the desired temperature at the time of rising.
+
+## Deployment
+
+### Mock
+
+If you are not able to work with a plug and a temperature sensor, you can use simple mocks. The [mock](./mock/) directory contains two mocks, respectively to mock the temperature sensor and to mock the [plug_communication](./plug_communication/).
+
+In order to use these mock, you need to specify as environment variable the file [mock.env](./mock.env). To do so, just specify it when starting the application with docker-compose : `docker-compose --env-file mock.env up -d`

@@ -28,8 +28,8 @@ services:
       # Hostname of our Postgres container.
       PGHOST: db
       MIX_ENV: dev
-      PLUG_URL: "http://plug:5000"
-      TEMP_URL: "http://bathroomtemp/temp"
+      PLUG_URL: "${PLUG_URL:-http://plug:5000}"
+      TEMP_URL: "${TEMP_URL:-http://bathroomtemp/temp}"
       TEMP_POLLING_TIME: 60000
     ports:
       - '4000:4000'
@@ -47,6 +47,22 @@ services:
       PLUG_IP: "192.168.0.159"
     ports:
       - '5000:5000'
+
+  plug_mock:
+    container_name: plug_mock
+    image: home_automation/plug_mock
+    build:
+      context: mock/plug
+    ports:
+      - '5001:5000'
+
+  temp_mock:
+    container_name: temp_mock
+    image: home_automation/temp_mock
+    build:
+      context: mock/temp_sensor
+    ports:
+      - '5002:5000'
 
 
 volumes:
