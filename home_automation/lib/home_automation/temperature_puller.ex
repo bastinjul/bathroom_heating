@@ -26,7 +26,10 @@ defmodule HomeAutomation.TemperaturePuller do
         {:ok, temp} -> temp
         _ -> actual_temp
       end
-      if new_temp != 0, do: PubSub.broadcast(HomeAutomation.PubSub, "temperature:measurement", {:temp, new_temp})
+      if new_temp != 0 do
+        PubSub.broadcast(HomeAutomation.PubSub, "temperature:measurement", {:temp, new_temp})
+        TemperatureManager.insert_temperature(%{temperature: new_temp})
+      end
       schedule_work()
       {:noreply, {:temp, new_temp}}
     end

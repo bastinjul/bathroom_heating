@@ -1,18 +1,29 @@
+<div class="flex items-baseline justify-between">
+  <h3 class="ml-4 text-gray-200 text-lg">
+    <%= Timex.format!(@current_date, "%B %Y", :strftime) %>
+  </h3>
+  <div>
+    <a href="#" phx-click="prev-month" class="inline-block text-sm bg-white p-2 rounded shadow text-gray-600 border border-gray-200">&laquo; Prev</a>
+    <a href="#" phx-click="next-month" class="inline-block text-sm bg-white p-2 rounded shadow text-gray-600 border border-gray-200">&raquo; Next</a>
+  </div>
+</div>
 <table class="w-full mt-4 border border-gray-200 rounded-lg shadow-lg">
   <thead>
     <tr>
-<%= for day_name <- @day_names do %>
-      <th class="text-xs p-2 text-gray-600 border border-gray-200">
+    <%= for day_name <- @day_names do %>
+      <th class="text-xs p-2 text-gray-200 border border-gray-200">
         <%= day_name %>
       </th>
-<% end %>
+    <% end %>
     </tr>
   </thead>
   <tbody>
 <%= for week <- @week_rows do %>
   <tr>
   <%= for day <- week do %>
-    <%= Timex.format!(day, "%d", :strftime) %>
+    <td phx-click="pick-date" phx-value-date={Timex.format!(day, "%Y-%m-%d", :strftime)} class={day_class(day, @current_date)}>
+      <%= Timex.format!(day, "%d", :strftime) %>
+    </td>
   <% end %>
   </tr>
 <% end %>

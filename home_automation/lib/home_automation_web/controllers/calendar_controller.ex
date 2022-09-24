@@ -7,16 +7,50 @@ defmodule HomeAutomationWeb.CalendarController do
   def mount(_params, _session, socket) do
     current_date = Timex.now()
 
-    {:ok, assign(socket,
-                    [conn: socket,
-                    current_date: current_date,
-                    day_names: day_names(@week_start_at),
-                    week_rows: week_rows(current_date)]
-                    )}
+    assigns = [
+      conn: socket,
+      current_date: current_date,
+      day_names: day_names(@week_start_at),
+      week_rows: week_rows(current_date)
+    ]
+
+    {:ok, assign(socket, assigns)}
   end
 
   def render(assigns) do
     Phoenix.View.render(HomeAutomationWeb.CalendarView, "index.html", assigns)
+  end
+
+  def handle_event("prev-month", _, socket) do
+    current_date = Timex.shift(socket.assigns.current_date, months: -1)
+
+    assigns = [
+      current_date: current_date,
+      week_rows: week_rows(current_date)
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event("next-month", _, socket) do
+    current_date = Timex.shift(socket.assigns.current_date, months: 1)
+
+    assigns = [
+      current_date: current_date,
+      week_rows: week_rows(current_date)
+    ]
+
+    {:noreply, assign(socket, assigns)}
+  end
+
+  def handle_event("pick-date", %{"date" => date}, socket) do
+    current_date = Timex.parse!(date, "{YYYY}-{0M}-{D}")
+
+    assigns = [
+      current_date: current_date
+    ]
+
+    {:noreply, assign(socket, assigns)}
   end
 
   defp day_names(:sun), do: [7, 1, 2, 3, 4, 5, 6] |> Enum.map(&Timex.day_shortname/1)

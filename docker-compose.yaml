@@ -14,6 +14,8 @@ services:
       - 5432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data/pgdata
+    networks:
+      - heating
 
   phoenix:
     container_name: phoenix
@@ -37,6 +39,8 @@ services:
       - db
     volumes:
       - ./home_automation:/app
+    networks:
+      - heating
 
   plug_communication:
     container_name: plug
@@ -47,6 +51,8 @@ services:
       PLUG_IP: "192.168.0.159"
     ports:
       - '5000:5000'
+    networks:
+      - heating
 
   plug_mock:
     container_name: plug_mock
@@ -55,6 +61,8 @@ services:
       context: mock/plug
     ports:
       - '5001:5000'
+    networks:
+      - heating
 
   temp_mock:
     container_name: temp_mock
@@ -63,7 +71,12 @@ services:
       context: mock/temp_sensor
     ports:
       - '5002:5000'
+    networks:
+      - heating
 
 
 volumes:
   pgdata:
+
+networks:
+  heating:
