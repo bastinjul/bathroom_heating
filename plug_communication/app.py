@@ -1,4 +1,3 @@
-from crypt import methods
 from flask import Flask, jsonify
 from tplink_smartplug import SmartPlug
 import os

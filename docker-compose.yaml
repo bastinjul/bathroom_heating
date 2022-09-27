@@ -53,6 +53,8 @@ services:
       - '5000:5000'
     networks:
       - heating
+    extra_hosts:
+      - "smartplug:192.168.0.159"
 
   plug_mock:
     container_name: plug_mock
@@ -80,3 +82,6 @@ volumes:
 
 networks:
   heating:
+    driver: bridge
+    ipam:
+      driver: default
