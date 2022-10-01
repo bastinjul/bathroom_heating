@@ -20,6 +20,14 @@ defmodule HomeAutomation.HeatingManager do
   end
 
   @doc """
+  Get the list of wake-up time for the days passed as argument
+  """
+  @spec wake_up_days_of_month(days :: list()) :: map()
+  def wake_up_days_of_month(days) do
+    Enum.into(Calendar.wake_up_days_of_month(days), %{})
+  end
+
+  @doc """
   Switch the plug on or off depending on its status
   """
   def switch_plug() do

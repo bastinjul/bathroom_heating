@@ -18,14 +18,14 @@
     </tr>
   </thead>
   <tbody>
-<%= for week <- @week_rows do %>
-  <tr>
-  <%= for day <- week do %>
-    <td phx-click="pick-date" phx-value-date={Timex.format!(day, "%Y-%m-%d", :strftime)} class={day_class(day, @current_date)}>
-      <%= Timex.format!(day, "%d", :strftime) %>
-    </td>
-  <% end %>
-  </tr>
-<% end %>
+    <%= for week <- @week_rows do %>
+      <tr>
+      <%= for day <- week do %>
+        <td phx-click="pick-date" phx-value-date={Timex.format!(day, "%Y-%m-%d", :strftime)} class={day_class(day, @current_date)}>
+          <%= Timex.format!(day, "%d", :strftime) %> - <%= Map.get(@wake_up_map, NaiveDateTime.to_date(day)) %>
+        </td>
+      <% end %>
+      </tr>
+    <% end %>
   </tbody>
 </table>
