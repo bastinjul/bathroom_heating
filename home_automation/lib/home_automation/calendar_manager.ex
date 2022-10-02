@@ -21,6 +21,13 @@ defmodule HomeAutomation.CalendarManager do
     Calendar.update_wake_up_time(day, new_time)
   end
 
+  @doc """
+  Delete the line with the given day
+  """
+  def delete_wake_up_time(day) do
+    Calendar.delete_wake_up_date(day)
+  end
+
   @spec get_wake_up_time(day :: Calendar.date()) :: {integer(), Calendar.date(), Calendar.time()}
   def get_wake_up_time(day) do
     Calendar.get_wake_up_time(day)

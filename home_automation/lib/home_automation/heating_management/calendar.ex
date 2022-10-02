@@ -46,6 +46,16 @@ defmodule HomeAutomation.HeatingManager.Calendar do
       |> Repo.update_all(set: [wake_up_time: new_time])
   end
 
+  @doc """
+  Delete the line with the given day
+  """
+  @spec delete_wake_up_date(day :: Calendar.date()) :: any()
+  def delete_wake_up_date(day) do
+    _ =
+      from(c in HomeAutomation.HeatingManager.Calendar, where: c.day == ^day, select: c)
+      |> Repo.delete_all
+  end
+
   defp create_query(days) do
     from c in HomeAutomation.HeatingManager.Calendar, where: c.day in ^days, select: {c.day, c.wake_up_time}
   end

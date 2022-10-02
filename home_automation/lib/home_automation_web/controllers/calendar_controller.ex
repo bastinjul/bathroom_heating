@@ -45,9 +45,16 @@ defmodule HomeAutomationWeb.CalendarLive do
     {:noreply, push_patch(assign(socket, assigns), to: "/calendar/modal")}
   end
 
-  def handle_event("modify-wake-up-time", args, socket) do
+  def handle_event("modify-wake-up-time", _, socket) do
 
     {:noreply, assign(socket, modifying: true)}
+  end
+
+  def handle_event("delete-wake-up-time", _, socket) do
+    current_date_d = NaiveDateTime.to_date(socket.assigns.current_date)
+    CalendarManager.delete_wake_up_time(current_date_d)
+    new_wake_up_map = Map.delete(socket.assigns.wake_up_map, current_date_d)
+    {:noreply, push_patch(assign(socket, wake_up_map: new_wake_up_map), to: "/calendar")}
   end
 
   def handle_event("save", %{"time" => %{"time_pick" => new_time_str}}, socket) do
