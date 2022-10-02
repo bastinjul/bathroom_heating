@@ -17,6 +17,12 @@ config :home_automation, HomeAutomationWeb.Endpoint,
   pubsub_server: HomeAutomation.PubSub,
   live_view: [signing_salt: "6WOk/TWK"]
 
+#config/config.exs
+config :home_automation, Oban,
+  repo: HomeAutomation.Repo,
+  plugins: [Oban.Plugins.Pruner],
+  queues: [default: 10]
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails

@@ -52,7 +52,8 @@ defmodule HomeAutomation.MixProject do
       {:tesla, "~> 1.4.4"},
       {:timex, "~> 3.7.8"},
       {:tailwind, "~> 0.1.5", runtime: Mix.env() == :dev},
-      {:petal_components, "~> 0.17"}
+      {:petal_components, "~> 0.17"},
+      {:oban, "~> 2.13"}
     ]
   end
 

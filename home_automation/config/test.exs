@@ -20,6 +20,9 @@ config :home_automation, HomeAutomationWeb.Endpoint,
   secret_key_base: "gO7g3xh4ofl5P0g/IK4Yow4JbvR+/HDQLfStPU+C6nmVAwnVJp9hb2n2NRdjfooB",
   server: false
 
+#config Oban
+config :home_automation, Oban, testing: :inline
+
 # In test we don't send emails.
 config :home_automation, HomeAutomation.Mailer, adapter: Swoosh.Adapters.Test
 

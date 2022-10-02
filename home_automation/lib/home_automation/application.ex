@@ -18,6 +18,7 @@ defmodule HomeAutomation.Application do
       HomeAutomationWeb.Endpoint,
       # Start a worker by calling: HomeAutomation.Worker.start_link(arg)
       # {HomeAutomation.Worker, arg}
+      {Oban, Application.fetch_env!(:home_automation, Oban)},
       HomeAutomation.TemperaturePuller
     ]
 
