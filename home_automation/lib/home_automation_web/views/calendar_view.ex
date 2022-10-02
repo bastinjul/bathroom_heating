@@ -4,13 +4,13 @@ defmodule HomeAutomationWeb.CalendarView do
   def day_class(day, current_date) do
     cond do
       today?(day) ->
-        "text-xs p-10 text-gray-600 border border-gray-200 bg-green-200 hover:bg-green-300 cursor-pointer"
+        "shrink text-xs p-10 text-gray-600 border border-gray-200 bg-green-200 hover:bg-green-300 cursor-pointer"
       current_date?(day, current_date) ->
-        "text-xs p-10 text-gray-600 border border-gray-200 bg-blue-100 cursor-pointer"
+        "shrink text-xs p-10 text-gray-600 border border-gray-200 bg-blue-100 cursor-pointer"
       other_month?(day, current_date) ->
-        "text-xs p-10 text-gray-400 border border-gray-200 bg-gray-200 cursor-not-allowed"
+        "shrink text-xs p-10 text-gray-400 border border-gray-200 bg-gray-200 cursor-not-allowed"
       true ->
-        "text-xs p-10 text-gray-600 border border-gray-200 bg-white hover:bg-blue-100 cursor-pointer"
+        "shrink text-xs p-10 text-gray-600 border border-gray-200 bg-white hover:bg-blue-100 cursor-pointer"
     end
   end
 

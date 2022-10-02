@@ -29,3 +29,21 @@
     <% end %>
   </tbody>
 </table>
+
+<%= if @live_action == :modal do %>
+    <.modal max_width="md" title={Timex.format!(@current_date, "%d %B %Y", :strftime)}>
+        <%= if Map.has_key?(@wake_up_map, NaiveDateTime.to_date(@current_date)) and !@modifying do %>
+            <.p>Wake-up time : <%= Map.get(@wake_up_map, NaiveDateTime.to_date(@current_date)) %></.p>
+        <% else %>
+            <.form let={f} for={:time} phx-submit="save">
+                <.form_field type="time_input" form={f} field={:time_pick} />
+                <.button type="submit" class="w-full" label="save" color="success" variant="outline"/>
+            </.form>
+        <% end %>
+        <div class="flex flex-col space-y-4">
+            <%= if Map.has_key?(@wake_up_map, NaiveDateTime.to_date(@current_date)) and !@modifying do %>
+                <.button label="modify" phx-click="modify-wake-up-time" color="warning"/>
+            <% end %>
+        </div>
+    </.modal>
+<% end %>

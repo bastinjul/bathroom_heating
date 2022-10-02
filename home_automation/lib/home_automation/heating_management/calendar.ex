@@ -30,9 +30,20 @@ defmodule HomeAutomation.HeatingManager.Calendar do
   @doc """
   Get the information about the wake up time for the given day
   """
-  @spec get_wake_up_time(day :: Calendar.date()) :: {Calendar.date(), Calendar.time()}
+  @spec get_wake_up_time(day :: Calendar.date()) :: %HomeAutomation.HeatingManager.Calendar{}
   def get_wake_up_time(day) do
-    query = from c in HomeAutomation.HeatingManager.Calendar, where: c.day == ^day, select: {c.day, c.wake_up_time}
+    query = from c in HomeAutomation.HeatingManager.Calendar, where: c.day == ^day
+    Repo.one(query)
+  end
+
+  @doc """
+  Update the wake-up-time for the given day
+  """
+  @spec update_wake_up_time(day :: Calendar.date(), new_time :: Calendar.time()) :: any()
+  def update_wake_up_time(day, new_time) do
+    {1, _} =
+      from(c in HomeAutomation.HeatingManager.Calendar, where: c.day == ^day, select: c)
+      |> Repo.update_all(set: [wake_up_time: new_time])
   end
 
   defp create_query(days) do

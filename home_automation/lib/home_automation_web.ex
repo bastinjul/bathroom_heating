@@ -94,6 +94,7 @@ defmodule HomeAutomationWeb do
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
+      use PetalComponents
 
       import HomeAutomationWeb.ErrorHelpers
       import HomeAutomationWeb.Gettext

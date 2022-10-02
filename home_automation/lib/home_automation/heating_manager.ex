@@ -9,16 +9,6 @@ defmodule HomeAutomation.HeatingManager do
   alias HomeAutomation.HeatingManager.Calendar
   alias HomeAutomation.HeatingManager.PlugClient
 
-
-  @doc """
-  Insert a calendar entry
-  """
-  def insert_calendar(attrs \\ %{}) do
-    %Calendar{}
-    |> Calendar.changeset(attrs)
-    |> Repo.insert()
-  end
-
   @doc """
   Get the list of wake-up time for the days passed as argument
   """

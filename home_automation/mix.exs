@@ -51,7 +51,8 @@ defmodule HomeAutomation.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:tesla, "~> 1.4.4"},
       {:timex, "~> 3.7.8"},
-      {:tailwind, "~> 0.1.5", runtime: Mix.env() == :dev}
+      {:tailwind, "~> 0.1.5", runtime: Mix.env() == :dev},
+      {:petal_components, "~> 0.17"}
     ]
   end
 

@@ -20,7 +20,8 @@ defmodule HomeAutomationWeb.Router do
     live "/temp", TemperatureController
     get "/plug", PlugController, :index
     get "/plug/switch", PlugController, :switch
-    live "/calendar", CalendarController
+    live "/calendar", CalendarLive, :index
+    live "/calendar/modal", CalendarLive, :modal
   end
 
   # Other scopes may use custom stacks.

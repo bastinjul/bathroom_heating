@@ -1,9 +1,10 @@
-defmodule HomeAutomationWeb.CalendarController do
+defmodule HomeAutomationWeb.CalendarLive do
   use HomeAutomationWeb, :live_view
   use Timex
   require Logger
 
   alias HomeAutomation.HeatingManager
+  alias HomeAutomation.CalendarManager
 
   @week_start_at :mon
 
@@ -11,14 +12,13 @@ defmodule HomeAutomationWeb.CalendarController do
     current_date = Timex.now()
     week_rows = week_rows(current_date)
     wake_up_map = HeatingManager.wake_up_days_of_month(List.flatten(week_rows))
-    IO.inspect wake_up_map
-    IO.inspect week_rows
     assigns = [
       conn: socket,
       current_date: current_date,
       day_names: day_names(@week_start_at),
       week_rows: week_rows,
-      wake_up_map: wake_up_map
+      wake_up_map: wake_up_map,
+      modifying: false
     ]
 
     {:ok, assign(socket, assigns)}
@@ -38,12 +38,42 @@ defmodule HomeAutomationWeb.CalendarController do
 
   def handle_event("pick-date", %{"date" => date}, socket) do
     current_date = Timex.parse!(date, "{YYYY}-{0M}-{D}")
-    Logger.debug IEx.Info.info(current_date)
     assigns = [
       current_date: current_date
     ]
 
-    {:noreply, assign(socket, assigns)}
+    {:noreply, push_patch(assign(socket, assigns), to: "/calendar/modal")}
+  end
+
+  def handle_event("modify-wake-up-time", args, socket) do
+
+    {:noreply, assign(socket, modifying: true)}
+  end
+
+  def handle_event("save", %{"time" => %{"time_pick" => new_time_str}}, socket) do
+    {:ok, new_time} = Time.from_iso8601("#{new_time_str}:00")
+    current_date_d = NaiveDateTime.to_date(socket.assigns.current_date)
+    if Map.has_key?(socket.assigns.wake_up_map, current_date_d) do
+      CalendarManager.modify_calendar(current_date_d, new_time)
+    else
+      CalendarManager.insert_calendar(%{wake_up_time: new_time, day: socket.assigns.current_date})
+    end
+    new_wake_up_map = Map.put(socket.assigns.wake_up_map, current_date_d, new_time)
+    {:noreply, push_patch(assign(socket, wake_up_map: new_wake_up_map), to: "/calendar")}
+  end
+
+  @impl true
+  def handle_params(params, _uri, socket) do
+    {:noreply, socket}
+  end
+
+  # The modal component emits this event when `PetalComponents.Modal.hide_modal()` is called.
+  # This happens when the user clicks the dark background or the 'X'.
+  @impl true
+  def handle_event("close_modal", _, socket) do
+
+    # Go back to the :index live action
+    {:noreply, push_patch(socket, to: "/calendar")}
   end
 
   defp change_month(socket, month) do
