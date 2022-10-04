@@ -17,6 +17,7 @@ defmodule HomeAutomation.HeatingManager.Calendar do
     calendar
     |> cast(attrs, [:day, :wake_up_time])
     |> validate_required([:day, :wake_up_time])
+    |> unique_constraint(:day)
   end
 
   @doc """

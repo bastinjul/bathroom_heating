@@ -10,6 +10,8 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 alias HomeAutomation.Repo
+alias HomeAutomation.Config
 
-Repo.insert!(%HomeAutomation.Config{label: "TEMP_GOAL", value: "20"})
-Repo.insert!(%HomeAutomation.Config{label: "MINUTES_BEFORE_WAKE_UP", value: "90"})
+Repo.insert!(%Config{label: Config.temp_goal(), value: "20"})
+Repo.insert!(%Config{label: Config.before_wake_up(), value: "90"})
+Repo.insert!(%Config{label: Config.after_wake_up(), value: "30"})

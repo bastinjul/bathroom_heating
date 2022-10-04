@@ -17,16 +17,30 @@
     <div class="flex place-content-center">
       <a id="temperature"><p class="text-xl underline underline-offset-8">Temperature :</p></a>
     </div>
-    <div class="flex place-content-center pt-4">
+    <div class="flex flex-col justify-center items-center pt-4">
       <p class="text-3xl"><%= @temperature %></p>
-    </div>
-  </div>
-  <div class="flex p-2 place-content-center">
-    <div class="flex place-content-center">
-      <a id="calendar"><p class="text-xl underline underline-offset-8">Calendar</p></a>
-    </div>
-    <div class="flex place-content-center">
-      
+      <.h2 class="underline">Config</.h2>
+      <.h3>Start heater <span class="underline"><%= @before_wake_up %></span> minutes before wake up </.h3>
+      <.h3>Stop heater <span class="underline"><%= @after_wake_up %></span> minutes after wake up</.h3>
+      <.h3>Goal temperature during wake-up : <span class="underline"><%= @temp_goal %></span></.h3>
+      <.button color="warning" label="Modify" phx-click="modif-config"/>
     </div>
   </div>
 </div>
+<%= if @live_action == :modal do %>
+    <.modal max_width="md" title="Modify Temperature Config">
+      <%= for conf <- Map.values(@config_modifs) do %>
+        <div class="flex flex-col justify-center items-center pt-4">
+          <%= if !conf.modif do %>
+            <.h3><%= conf.label %> <span class="underline"><%= conf.value %></span></.h3>
+            <.button color="warning" label="modify" phx-click="modify" phx-value-field={conf.id} />
+          <% else %>
+            <.form let={f} for={:temp_config} phx-submit={conf.id}>
+                <.form_field type="number_input" placeholder={conf.value} form={f} field={conf.id} />
+                <.button type="submit" class="w-full" label="save" color="success" variant="outline"/>
+            </.form>
+          <% end %>
+        </div>
+      <% end %>
+    </.modal>
+<% end %>
