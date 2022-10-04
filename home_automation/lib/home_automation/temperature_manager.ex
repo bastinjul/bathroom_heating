@@ -25,4 +25,8 @@ defmodule HomeAutomation.TemperatureManager do
   def get_temperature() do
     TemperatureClient.get_temperature()
   end
+
+  def get_most_recent_temperature() do
+
+  end
 end

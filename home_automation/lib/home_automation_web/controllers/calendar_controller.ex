@@ -5,6 +5,10 @@ defmodule HomeAutomationWeb.CalendarLive do
 
   alias HomeAutomation.HeatingManager
   alias HomeAutomation.CalendarManager
+  alias HomeAutomation.PlugActivatorWorker
+  alias HomeAutomation.ConfigManager
+
+  alias Oban.Job
 
   @week_start_at :mon
 
@@ -73,7 +77,7 @@ defmodule HomeAutomationWeb.CalendarLive do
     else
       CalendarManager.insert_calendar(%{wake_up_time: new_time, day: socket.assigns.current_date})
     end
-    #TODO : add event to plug_activator_worker in wake_up_time minus MINUTES_BEFORE_WAKE_UP
+    publish_event(new_time, current_date_d)
     new_wake_up_map = Map.put(socket.assigns.wake_up_map, current_date_d, new_time)
     {:noreply, push_patch(assign(socket, wake_up_map: new_wake_up_map), to: "/calendar")}
   end
@@ -122,5 +126,16 @@ defmodule HomeAutomationWeb.CalendarLive do
     Interval.new(from: first, until: last)
     |> Enum.map(& &1)
     |> Enum.chunk_every(7)
+  end
+
+  defp publish_event(wake_up_time, day) do
+    %{"day" => day,"wake_up_time" => wake_up_time}
+      |> PlugActivatorWorker.new(schedule_in: get_event_schedule_time(day, wake_up_time), replace: [:scheduled_at])
+      |> Oban.insert()
+  end
+
+  defp get_event_schedule_time(day, wake_up_time) do
+    DateTime.new!(day, wake_up_time, "Europe/Brussels", Timex.Timezone.Database)
+    |> Timex.subtract(ConfigManager.get_minutes_before_wake_up() |> String.to_integer |> Timex.Duration.from_minutes)
   end
 end

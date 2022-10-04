@@ -9,7 +9,7 @@ defmodule HomeAutomation.PlugActivatorWorker do
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"day" => day,"wake_up_time" => wake_up_time} = _args}) do
-    PubSub.broadcast(HomeAutomation.PubSub, "plug:activation", {:day, day, :wake_up_time, wake_up_time})
+    PubSub.broadcast(HomeAutomation.PubSub, "plug:activation", {:start_plug_management, {:day, day, :wake_up_time, wake_up_time}})
     :ok
   end
   

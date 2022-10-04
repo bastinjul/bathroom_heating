@@ -2,7 +2,12 @@ defmodule HomeAutomation.PlugActivatorManager do
   use GenServer
   require Logger
 
+  alias HomeAutomation.ConfigManager
+  alias HomeAutomation.TemperatureManager
+  alias HomeAutomation.HeatingManager.PlugClient
   alias Phoenix.PubSub
+
+  @interval_millisec 60000
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, %{})
@@ -15,13 +20,37 @@ defmodule HomeAutomation.PlugActivatorManager do
   end
 
   @impl true
-  def handle_info({:day, day, :wake_up_time, wake_up_time}, _state) do
-    #TODO: implement logic of plug activation/deactivation
-    #TODO: retrieve TEMP_GOAL and compare it with actual temperature (check last inserted value in DB)
-    #TODO: if actual_temp < TEMP_GOAL : activate the plug if it's not yet activated. Else : deactivate the plug if it's not yet off.
-    #TODO: Make the previous check every minute
-    #TODO: perform the whole job until wake_up_time + MINUTES_AFTER_WAKE_UP
-    {:noreply, %{:day => day, :wake_up_time => wake_up_time}}
+  def handle_info({:start_plug_management, {:day, day, :wake_up_time, wake_up_time}}, _state) do
+    if Timex.after?(Timex.now("Europe/Brussels"), get_stop_time(day, wake_up_time)) do
+      {:noreply, %{}}
+    else
+      schedule_work()
+      {:noreply, %{:day => day, :wake_up_time => wake_up_time}}
+    end
+  end
+
+  @impl true
+  def handle_info(:plug_management, %{:day => day, :wake_up_time => wake_up_time}) do
+    if Timex.after?(Timex.now("Europe/Brussels"), get_stop_time(day, wake_up_time)) do
+      {:noreply, %{}}
+    else
+      if ConfigManager.get_temp_goal() <= TemperatureManager.get_most_recent_temperature()do
+        PlugClient.turn_off_plug()
+      else
+        PlugClient.turn_on_plug()
+      end
+      schedule_work()
+      {:noreply, %{:day => day, :wake_up_time => wake_up_time}}
+    end
+  end
+
+  defp schedule_work do
+    Process.send_after(self(), :plug_management, @interval_millisec)
+  end
+
+  defp get_stop_time(day, wake_up_time) do
+    DateTime.new!(day, wake_up_time, "Europe/Brussels", Timex.Timezone.Database)
+    |> Timex.add(Timex.Duration.from_minutes(Integer.parse(ConfigManager.get_minutes_after_wake_up())))
   end
 
 end
