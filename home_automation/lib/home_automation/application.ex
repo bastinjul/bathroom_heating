@@ -19,7 +19,8 @@ defmodule HomeAutomation.Application do
       # Start a worker by calling: HomeAutomation.Worker.start_link(arg)
       # {HomeAutomation.Worker, arg}
       {Oban, Application.fetch_env!(:home_automation, Oban)},
-      HomeAutomation.TemperaturePuller
+      HomeAutomation.TemperaturePuller,
+      HomeAutomation.PlugActivatorManager
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

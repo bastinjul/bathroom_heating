@@ -21,7 +21,7 @@ config :home_automation, HomeAutomationWeb.Endpoint,
 config :home_automation, Oban,
   repo: HomeAutomation.Repo,
   plugins: [Oban.Plugins.Pruner],
-  queues: [default: 10]
+  queues: [calendar_wake_up_plug_activation: 10]
 
 # Configures the mailer
 #

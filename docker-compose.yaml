@@ -10,6 +10,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_HOST_AUTH_METHOD: trust
+      TZ: "Europe/Brussels"
     ports:
       - 5432:5432
     volumes:
@@ -36,7 +37,7 @@ services:
       TEMP_URL: "${TEMP_URL:-http://bathroomtemp/temp}"
       TEMP_POLLING_TIME: 60000
     ports:
-      - '4000:4000'
+      - '80:4000'
     depends_on:
       - db
     volumes:

@@ -4,7 +4,6 @@ defmodule HomeAutomation.HeatingManager do
   """
 
   import Ecto.Query, warn: false
-  alias HomeAutomation.Repo
 
   alias HomeAutomation.HeatingManager.Calendar
   alias HomeAutomation.HeatingManager.PlugClient

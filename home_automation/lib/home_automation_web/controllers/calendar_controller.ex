@@ -8,8 +8,6 @@ defmodule HomeAutomationWeb.CalendarLive do
   alias HomeAutomation.PlugActivatorWorker
   alias HomeAutomation.ConfigManager
 
-  alias Oban.Job
-
   @week_start_at :mon
 
   @impl true
@@ -130,7 +128,7 @@ defmodule HomeAutomationWeb.CalendarLive do
 
   defp publish_event(wake_up_time, day) do
     %{"day" => day,"wake_up_time" => wake_up_time}
-      |> PlugActivatorWorker.new(schedule_in: get_event_schedule_time(day, wake_up_time), replace: [:scheduled_at])
+      |> PlugActivatorWorker.new(scheduled_at: get_event_schedule_time(day, wake_up_time), replace: [:scheduled_at, :args])
       |> Oban.insert()
   end
 

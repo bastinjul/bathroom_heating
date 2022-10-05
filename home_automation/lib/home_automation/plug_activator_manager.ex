@@ -15,16 +15,21 @@ defmodule HomeAutomation.PlugActivatorManager do
 
   @impl true
   def init(_) do
+    Logger.info "Start Module that handles plug activation."
     PubSub.subscribe(HomeAutomation.PubSub, "plug:activation")
     {:ok, %{}}
   end
 
   @impl true
   def handle_info({:start_plug_management, {:day, day, :wake_up_time, wake_up_time}}, _state) do
-    if Timex.after?(Timex.now("Europe/Brussels"), get_stop_time(day, wake_up_time)) do
+    now = Timex.now("Europe/Brussels")
+    stop_time = get_stop_time(day, wake_up_time)
+    Logger.info "Start plug management at #{now}. Stop time = #{stop_time}"
+    if Timex.after?(now, stop_time) do
+      PlugClient.turn_off_plug()
       {:noreply, %{}}
     else
-      schedule_work()
+      schedule_work(0)
       {:noreply, %{:day => day, :wake_up_time => wake_up_time}}
     end
   end
@@ -32,25 +37,26 @@ defmodule HomeAutomation.PlugActivatorManager do
   @impl true
   def handle_info(:plug_management, %{:day => day, :wake_up_time => wake_up_time}) do
     if Timex.after?(Timex.now("Europe/Brussels"), get_stop_time(day, wake_up_time)) do
+      PlugClient.turn_off_plug()
       {:noreply, %{}}
     else
-      if ConfigManager.get_temp_goal() <= TemperatureManager.get_most_recent_temperature()do
+      if ConfigManager.get_temp_goal() <= TemperatureManager.get_most_recent_temperature() do
         PlugClient.turn_off_plug()
       else
         PlugClient.turn_on_plug()
       end
-      schedule_work()
+      schedule_work(@interval_millisec)
       {:noreply, %{:day => day, :wake_up_time => wake_up_time}}
     end
   end
 
-  defp schedule_work do
-    Process.send_after(self(), :plug_management, @interval_millisec)
+  defp schedule_work(interval) do
+    Process.send_after(self(), :plug_management, interval)
   end
 
   defp get_stop_time(day, wake_up_time) do
     DateTime.new!(day, wake_up_time, "Europe/Brussels", Timex.Timezone.Database)
-    |> Timex.add(Timex.Duration.from_minutes(Integer.parse(ConfigManager.get_minutes_after_wake_up())))
+    |> Timex.add(Timex.Duration.from_minutes(String.to_integer(ConfigManager.get_minutes_after_wake_up())))
   end
 
 end
