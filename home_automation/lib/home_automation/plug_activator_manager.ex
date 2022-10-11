@@ -26,8 +26,7 @@ defmodule HomeAutomation.PlugActivatorManager do
     stop_time = get_stop_time(day, wake_up_time)
     Logger.info "Start plug management at #{now}. Stop time = #{stop_time}"
     if Timex.after?(now, stop_time) do
-      PlugClient.turn_off_plug()
-      {:noreply, %{}}
+      turn_off_plug()
     else
       schedule_work(0)
       {:noreply, %{:day => day, :wake_up_time => wake_up_time}}
@@ -37,13 +36,16 @@ defmodule HomeAutomation.PlugActivatorManager do
   @impl true
   def handle_info(:plug_management, %{:day => day, :wake_up_time => wake_up_time}) do
     if Timex.after?(Timex.now("Europe/Brussels"), get_stop_time(day, wake_up_time)) do
-      PlugClient.turn_off_plug()
-      {:noreply, %{}}
+      turn_off_plug()
     else
-      if ConfigManager.get_temp_goal() <= TemperatureManager.get_most_recent_temperature() do
-        PlugClient.turn_off_plug()
-      else
-        PlugClient.turn_on_plug()
+      try do
+        if ConfigManager.get_temp_goal() <= TemperatureManager.get_most_recent_temperature() do
+          PlugClient.turn_off_plug()
+        else
+          PlugClient.turn_on_plug()
+        end
+      rescue
+        _ -> Logger.error "Impossible to turn of plug"
       end
       schedule_work(@interval_millisec)
       {:noreply, %{:day => day, :wake_up_time => wake_up_time}}
@@ -57,6 +59,16 @@ defmodule HomeAutomation.PlugActivatorManager do
   defp get_stop_time(day, wake_up_time) do
     DateTime.new!(day, wake_up_time, "Europe/Brussels", Timex.Timezone.Database)
     |> Timex.add(Timex.Duration.from_minutes(String.to_integer(ConfigManager.get_minutes_after_wake_up())))
+  end
+
+  defp turn_off_plug() do
+    try do
+      PlugClient.turn_off_plug()
+    rescue
+      _ -> Logger.error "Impossible to turn of plug"
+    after
+      {:noreply, %{}}
+    end
   end
 
 end
