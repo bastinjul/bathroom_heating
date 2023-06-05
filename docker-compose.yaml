@@ -4,7 +4,7 @@ services:
   db:
     container_name: db
     image: postgres:14.2
-    restart: no
+    restart: "no"
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_USER: postgres
