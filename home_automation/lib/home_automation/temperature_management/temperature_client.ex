@@ -1,9 +1,10 @@
 defmodule HomeAutomation.TemperatureManager.TemperatureClient do
   require Logger
-  use Tesla
+  use Tesla, only: [:get], docs: false
 
   plug Tesla.Middleware.BaseUrl, System.get_env("TEMP_URL")
   plug Tesla.Middleware.JSON
+  plug Tesla.Middleware.Timeout, timeout: 5_000
 
   @spec get_temperature :: {:ok, float} | :error
   @doc """

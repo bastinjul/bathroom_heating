@@ -8,6 +8,7 @@ defmodule HomeAutomationWeb.PageLive do
 
   alias HomeAutomation.HeatingManager
   alias HomeAutomation.ConfigManager
+  alias HomeAutomation.TemperatureManager
   alias Phoenix.PubSub
 
   @impl true
@@ -23,8 +24,9 @@ defmodule HomeAutomationWeb.PageLive do
     temp_goal = ConfigManager.get_temp_goal()
     before_wake_up = ConfigManager.get_minutes_before_wake_up()
     after_wake_up = ConfigManager.get_minutes_after_wake_up()
+    last_temp = TemperatureManager.get_most_recent_temperature()
     assigns = [
-      temperature: :waiting_temp,
+      temperature: last_temp,
       plug_status: plug_status,
       before_wake_up: before_wake_up,
       after_wake_up: after_wake_up,
@@ -41,6 +43,7 @@ defmodule HomeAutomationWeb.PageLive do
 
   @impl true
   def handle_info({:temp, temp}, socket) do
+    Logger.debug "Display temperature #{temp}"
     {:noreply, assign(socket, :temperature, temp)}
   end
 

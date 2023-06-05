@@ -4,7 +4,7 @@ services:
   db:
     container_name: db
     image: postgres:14.2
-    restart: always
+    restart: no
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_USER: postgres
@@ -40,6 +40,8 @@ services:
       - '80:4000'
     depends_on:
       - db
+    extra_hosts:
+      - "bathroomtemp:192.168.0.230"
     volumes:
       - ./home_automation:/app
       - ./datetime/timezone:/etc/timezone
