@@ -39,7 +39,8 @@ defmodule HomeAutomation.PlugActivatorManager do
       turn_off_plug()
     else
       try do
-        if ConfigManager.get_temp_goal() <= TemperatureManager.get_most_recent_temperature() do
+        {temp_goal, _} = Float.parse(ConfigManager.get_temp_goal())
+        if temp_goal <= TemperatureManager.get_most_recent_temperature() do
           PlugClient.turn_off_plug()
         else
           PlugClient.turn_on_plug()
